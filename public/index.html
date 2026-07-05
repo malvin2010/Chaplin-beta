@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chaplin MD v2.5 — Pair Your Number</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root {
+  --bg: #0b1210;
+  --surface: #10201a;
+  --surface-2: #16281f;
+  --gold: #d8a64b;
+  --teal: #2fbf9e;
+  --text: #edede6;
+  --muted: #8fa39b;
+  --danger: #e26a5c;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+  font-family: 'Inter', sans-serif; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 24px; position: relative; overflow-x: hidden;
+}
+.bg-glow {
+  position: fixed; inset: 0;
+  background: radial-gradient(circle at 20% 15%, rgba(216, 166, 75, 0.10), transparent 40%),
+              radial-gradient(circle at 85% 80%, rgba(47, 191, 158, 0.12), transparent 45%);
+  pointer-events: none; z-index: 0;
+}
+.card {
+  position: relative; z-index: 1; background: var(--surface);
+  border: 1px solid rgba(216, 166, 75, 0.18); border-radius: 18px; padding: 40px 32px;
+  max-width: 400px; width: 100%; text-align: center; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+}
+.badge {
+  display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  letter-spacing: 0.12em; color: var(--gold); border: 1px solid rgba(216, 166, 75, 0.4);
+  padding: 4px 10px; border-radius: 999px; margin-bottom: 18px;
+}
+h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.4rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+h1 span { color: var(--teal); }
+.tagline { color: var(--muted); margin: 0 0 4px; font-size: 0.95rem; }
+.credit { color: var(--muted); font-size: 0.8rem; margin: 0 0 20px; }
+.credit strong { color: var(--gold); font-weight: 600; }
+.divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(216,166,75,0.35), transparent); margin: 20px 0 24px; }
+label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; text-align: left; }
+.hint { font-size: 0.78rem; color: var(--muted); text-align: left; margin: 0 0 12px; line-height: 1.5; }
+.hint.small { text-align: center; margin-top: 12px; }
+input {
+  width: 100%; padding: 13px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12);
+  background: var(--surface-2); color: var(--text); font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem; margin-bottom: 16px;
+}
+input:focus { outline: 2px solid var(--teal); outline-offset: 1px; }
+button {
+  width: 100%; padding: 14px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, var(--gold), #c48f39); color: #14140f;
+  font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+button:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(216,166,75,0.5); }
+button:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+button.secondary { background: var(--surface-2); color: var(--text); border: 1px solid rgba(255,255,255,0.15); }
+button.link { background: transparent; color: var(--muted); font-size: 0.82rem; padding: 8px; margin-top: 10px; }
+button.link:hover { color: var(--teal); }
+.error { color: var(--danger); font-size: 0.82rem; min-height: 18px; margin-top: 6px; }
+.hidden { display: none; }
+.code {
+  font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; letter-spacing: 0.08em;
+  color: var(--teal); background: var(--surface-2); border: 1px dashed rgba(47, 191, 158, 0.5);
+  border-radius: 12px; padding: 20px; margin: 14px 0; position: relative;
+}
+.code::before, .code::after {
+  content: ''; position: absolute; width: 18px; height: 18px; background: var(--surface);
+  border-radius: 50%; top: 50%; transform: translateY(-50%);
+}
+.code::before { left: -9px; }
+.code::after { right: -9px; }
+.spinner {
+  width: 28px; height: 28px; border: 3px solid rgba(216,166,75,0.25); border-top-color: var(--gold);
+  border-radius: 50%; margin: 0 auto 14px; animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { button, .spinner { animation: none !important; transition: none !important; } }
+footer { position: relative; z-index: 1; margin-top: 20px; color: var(--muted); font-size: 0.75rem; text-align: center; }
+</style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <main class="card">
+    <div class="badge">v2.5</div>
+    <h1>Chaplin<span>MD</span></h1>
+    <p class="tagline">WhatsApp Multi-Device Bot</p>
+    <p class="credit">Created by <strong>Malvin C</strong> · Powered by <strong>Handsome Tech ZW</strong></p>
+
+    <div class="divider"></div>
+
+    <div id="step-input">
+      <label for="number">Enter your WhatsApp number</label>
+      <p class="hint">Include country code, digits only. No + or spaces. e.g. 263780026088</p>
+      <input id="number" type="tel" placeholder="263780026088" />
+      <button id="pairBtn">Generate Pairing Code</button>
+      <p id="error" class="error"></p>
+    </div>
+
+    <div id="step-code" class="hidden">
+      <p class="hint">Open WhatsApp → Linked Devices → Link a Device → Link with phone number instead, then enter:</p>
+      <div class="code" id="codeDisplay">----</div>
+      <button id="copyBtn" class="secondary">Copy Code</button>
+      <p class="hint small">This code expires quickly — pair right away.</p>
+      <button id="backBtn" class="link">← Try another number</button>
+    </div>
+
+    <div id="step-loading" class="hidden">
+      <div class="spinner"></div>
+      <p>Generating your pairing code...</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>Chaplin MD v2.5 · Malvin C · Handsome Tech ZW</p>
+  </footer>
+
+  <script>
+    const numberInput = document.getElementById('number');
+    const pairBtn = document.getElementById('pairBtn');
+    const errorEl = document.getElementById('error');
+    const stepInput = document.getElementById('step-input');
+    const stepCode = document.getElementById('step-code');
+    const stepLoading = document.getElementById('step-loading');
+    const codeDisplay = document.getElementById('codeDisplay');
+    const copyBtn = document.getElementById('copyBtn');
+    const backBtn = document.getElementById('backBtn');
+
+    function showStep(step) {
+      [stepInput, stepCode, stepLoading].forEach(el => el.classList.add('hidden'));
+      step.classList.remove('hidden');
+    }
+
+    pairBtn.addEventListener('click', async () => {
+      errorEl.textContent = '';
+      const number = numberInput.value.trim();
+      if (!/^\d{8,15}$/.test(number)) {
+        errorEl.textContent = 'Enter a valid number with country code, digits only.';
+        return;
+      }
+      showStep(stepLoading);
+      try {
+        const res = await fetch('/api/pair', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ number })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Pairing failed.');
+        codeDisplay.textContent = data.code;
+        showStep(stepCode);
+      } catch (e) {
+        showStep(stepInput);
+        errorEl.textContent = e.message;
+      }
+    });
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(codeDisplay.textContent.replace(/-/g, ''));
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => (copyBtn.textContent = 'Copy Code'), 1500);
+    });
+
+    backBtn.addEventListener('click', () => {
+      errorEl.textContent = '';
+      showStep(stepInput);
+    });
+  </script>
+</body>
+</html>
